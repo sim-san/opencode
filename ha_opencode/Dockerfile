@@ -34,12 +34,14 @@ ENV NODE_ENV=production \
 # - curl/ca-certificates: For downloading ttyd
 # - procps: Provides pgrep for health check
 # - tmux: Session persistence to prevent multiple OpenCode instances
+# - nginx: Reverse proxy for web mode (rewrites paths for HA ingress)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
         git \
         jq \
+        nginx \
         nodejs \
         npm \
         procps \

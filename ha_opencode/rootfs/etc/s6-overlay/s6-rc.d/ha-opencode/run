@@ -42,7 +42,23 @@ export NODE_OPTIONS="--max-old-space-size=512"
 
 if [ "${UI_MODE}" = "web" ]; then
     bashio::log.info "Starting OpenCode Web UI on port 8099 (Home Assistant ingress)..."
-    exec opencode web --hostname 0.0.0.0 --port 8099
+
+    # opencode web serves assets with absolute paths (/assets/...) which bypass
+    # HA ingress. nginx rewrites them to relative paths (./) so the browser
+    # fetches them through the ingress proxy.
+    opencode web --hostname 127.0.0.1 --port 8100 &
+    OPENCODE_PID=$!
+
+    # Give the server a moment to bind
+    sleep 2
+
+    if ! kill -0 "${OPENCODE_PID}" 2>/dev/null; then
+        bashio::log.error "opencode web failed to start"
+        exit 1
+    fi
+
+    bashio::log.info "opencode web running on internal port 8100, starting nginx proxy on 8099..."
+    exec nginx -c /etc/nginx/opencode-web.conf
 fi
 
 # ==============================================================================
