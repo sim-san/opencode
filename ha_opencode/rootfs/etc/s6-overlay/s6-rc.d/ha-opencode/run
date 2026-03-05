@@ -19,6 +19,25 @@ if [ -f /data/.env_vars ]; then
 fi
 
 # ==============================================================================
+# Runtime mode selection
+# ==============================================================================
+
+UI_MODE=$(bashio::config 'ui_mode' 2>/dev/null || echo "tui")
+
+if [ "${UI_MODE}" != "tui" ] && [ "${UI_MODE}" != "web" ]; then
+    bashio::log.warning "Unknown ui_mode '${UI_MODE}', defaulting to 'tui'"
+    UI_MODE="tui"
+fi
+
+# Set Node.js memory limit (hardcoded for stability)
+export NODE_OPTIONS="--max-old-space-size=512"
+
+if [ "${UI_MODE}" = "web" ]; then
+    bashio::log.info "Starting OpenCode Web UI on port 8099 (Home Assistant ingress)..."
+    exec opencode web --hostname 0.0.0.0 --port 8099
+fi
+
+# ==============================================================================
 # Read terminal appearance configuration
 # ==============================================================================
 
@@ -85,12 +104,6 @@ get_theme() {
 }
 
 THEME_JSON=$(get_theme "${TERMINAL_THEME}")
-
-# ==============================================================================
-# Set Node.js memory limit (hardcoded for stability)
-# ==============================================================================
-
-export NODE_OPTIONS="--max-old-space-size=512"
 
 bashio::log.info "Starting ttyd on port 8099 (Home Assistant ingress)..."
 

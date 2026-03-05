@@ -22,6 +22,7 @@ Configure the app from the **Configuration** tab in the app page.
 |--------|---------|-------------|
 | **Enable MCP Home Assistant Integration** | `true` | Enable the Model Context Protocol (MCP) server for deep Home Assistant integration. Includes 33 tools, 13 resources, 6 guided prompts, and an intelligence layer for anomaly detection, config validation, and automation suggestions. |
 | **Enable LSP Home Assistant Integration** | `true` | Enable the Language Server Protocol (LSP) server for intelligent YAML editing. Provides entity/service autocomplete, hover documentation, diagnostics for unknown entities, and go-to-definition for !include tags. |
+| **UI Mode** | `tui` | Interface mode. `tui` uses a web-based terminal (ttyd + tmux) with theme customization. `web` uses OpenCode's built-in browser-native interface and does not require terminal interaction. Terminal appearance settings apply only in `tui` mode. |
 
 ### Terminal Appearance
 

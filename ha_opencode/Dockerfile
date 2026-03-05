@@ -85,7 +85,7 @@ WORKDIR /homeassistant
 
 # Health check - verify ttyd is running
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD pgrep ttyd > /dev/null || exit 1
+    CMD pgrep -f 'ttyd|opencode' > /dev/null || exit 1
 
 # Labels for Home Assistant
 LABEL \
